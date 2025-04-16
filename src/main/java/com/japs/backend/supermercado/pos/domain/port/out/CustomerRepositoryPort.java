@@ -19,5 +19,4 @@ public interface CustomerRepositoryPort {
 
     List<Customer> findAll();
 
-    void verifyDatabaseConnection();
 }

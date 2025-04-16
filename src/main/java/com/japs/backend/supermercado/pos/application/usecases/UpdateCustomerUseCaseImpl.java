@@ -3,6 +3,7 @@ package com.japs.backend.supermercado.pos.application.usecases;
 import com.japs.backend.supermercado.pos.domain.model.Customer;
 import com.japs.backend.supermercado.pos.domain.port.in.UpdateCustomerUseCase;
 import com.japs.backend.supermercado.pos.domain.port.out.CustomerRepositoryPort;
+import com.japs.backend.supermercado.pos.domain.port.out.DBConnectionPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,11 +14,12 @@ import java.time.LocalDate;
 public class UpdateCustomerUseCaseImpl implements UpdateCustomerUseCase {
 
 	private final CustomerRepositoryPort customerRepositoryPort;
+	private final DBConnectionPort dbConnectionPort;
 
 	@Override
 	public Customer updateCustomer(Long id, Customer customer) {
 
-		customerRepositoryPort.verifyDatabaseConnection();
+		dbConnectionPort.verifyDatabaseConnection();
 		
 		Customer customerBd = customerRepositoryPort.findById(id).orElse(null);
 		if (customerBd == null) {
