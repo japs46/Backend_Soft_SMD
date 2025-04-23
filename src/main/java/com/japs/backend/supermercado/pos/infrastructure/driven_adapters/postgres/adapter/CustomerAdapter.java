@@ -7,7 +7,6 @@ import com.japs.backend.supermercado.pos.infrastructure.driven_adapters.postgres
 import com.japs.backend.supermercado.pos.infrastructure.driven_adapters.postgres.repository.CustomerEntityRepository;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -29,14 +28,14 @@ public class CustomerAdapter implements CustomerRepositoryPort {
     }
 
     @Override
-    public Customer update(Customer customer) {
-        CustomerEntity customerEntity= CustomerMapper.toEntity(customer);
-        return CustomerMapper.toModel(customerEntityRepository.save(customerEntity));
+    public void delete(Long id) {
+        customerEntityRepository.deleteById(id);
     }
 
     @Override
-    public void delete(Long id) {
-        customerEntityRepository.deleteById(id);
+    public Customer update(Customer customer) {
+        CustomerEntity customerEntity= CustomerMapper.toEntity(customer);
+        return CustomerMapper.toModel(customerEntityRepository.save(customerEntity));
     }
 
     @Override
@@ -59,12 +58,4 @@ public class CustomerAdapter implements CustomerRepositoryPort {
                 map(CustomerMapper::toModel);
     }
 
-    @Override
-    public void verifyDatabaseConnection() {
-        try {
-            jdbcTemplate.execute("SELECT 1");
-        } catch (DataAccessResourceFailureException ex) {
-            throw new RuntimeException("El servicio de base de datos no está disponible. Por favor, intente más tarde.", ex);
-        }
-    }
 }
