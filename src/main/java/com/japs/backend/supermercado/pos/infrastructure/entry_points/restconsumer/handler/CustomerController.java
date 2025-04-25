@@ -1,6 +1,8 @@
 package com.japs.backend.supermercado.pos.infrastructure.entry_points.restconsumer.handler;
 
 
+import com.japs.backend.supermercado.pos.application.response.ApiResponse;
+import com.japs.backend.supermercado.pos.application.utils.ResponseBuilder;
 import com.japs.backend.supermercado.pos.domain.model.Customer;
 import com.japs.backend.supermercado.pos.domain.port.in.CreateCustomerUseCase;
 import com.japs.backend.supermercado.pos.domain.port.in.DeleteCustomerUseCase;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/customer")
@@ -31,82 +35,68 @@ public class CustomerController {
 	private final RetrieveCustomerUseCase retrieveCustomerUseCase;
 
 	@PostMapping("/save")
-	public ResponseEntity<?> saveCustomer(@Valid @RequestBody Customer customerRequest){
-		try {
-			return ResponseEntity.ok(createCustomerUseCase.createCustomer(customerRequest));
-		} catch (RuntimeException e) {
-			log.warn(e.getMessage());
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}catch (Exception e) {
-			log.error("Error inesperado: "+e.getMessage());
-			return ResponseEntity.internalServerError().body("No se pudo crear el cliente.");
-		}
-		
+	public ResponseEntity<ApiResponse<Customer>> saveCustomer(@Valid @RequestBody Customer customerRequest){
+		log.info("Inicio creación de cliente");
+		log.info("request create cliente: {}",customerRequest.toString());
+
+		Customer customer = createCustomerUseCase.createCustomer(customerRequest);
+		ApiResponse<Customer> apiResponse = ResponseBuilder.successMessage("Cliente creado exitosamente",customer);
+
+		log.info("response create cliente: {}",apiResponse.toString());
+		log.info("Finalizo creación de cliente");
+
+		return ResponseEntity.ok(apiResponse);
 	}
 	
 	@PutMapping("/update/{id}")
-	public ResponseEntity<?> updateCustomer(@PathVariable Long id,@RequestBody Customer customerRequest){
-		try {
-			return ResponseEntity.ok(updateCustomerUseCase.updateCustomer(id,customerRequest));
-		} catch (RuntimeException e) {
-			log.warn(e.getMessage());
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}catch (Exception e) {
-			log.error("Error inesperado: "+e.getMessage());
-			return ResponseEntity.internalServerError().body("No se pudo actualizar el cliente.");
-		}
+	public ResponseEntity<ApiResponse<Customer>> updateCustomer(@PathVariable Long id,@RequestBody Customer customerRequest){
+		log.info("Inicio actualizacion de cliente: {}",id);
+		log.info("request update cliente: {}",customerRequest.toString());
+
+		Customer customer = updateCustomerUseCase.updateCustomer(id,customerRequest);
+		ApiResponse<Customer> apiResponse = ResponseBuilder.successMessage("Cliente actualizado exitosamente",customer);
+
+		log.info("response update cliente: {}",apiResponse.toString());
+		log.info("Finalizo actualizacion de cliente");
+
+		return ResponseEntity.ok(apiResponse);
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<?> deleteCustomer(@PathVariable Long id){
-		try {
-			deleteCustomerUseCase.deleteCustomer(id);
-			return ResponseEntity.ok("Se Elimino el cliente correctamente.");
-		} catch (RuntimeException e) {
-			log.warn(e.getMessage());
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}catch (Exception e) {
-			log.error("Error inesperado: "+e.getMessage());
-			return ResponseEntity.internalServerError().body("Ocurrio un inconveniente no se pudo eliminar el cliente.");
-		}
+	public ResponseEntity<ApiResponse<Void>> deleteCustomer(@PathVariable Long id){
+		log.info("Inicio eliminacion cliente");
+		log.info("request entrada id: {}",id);
+
+		deleteCustomerUseCase.deleteCustomer(id);
+		ApiResponse<Void> apiResponse = ResponseBuilder.successMessage("Se Elimino el cliente correctamente.");
+
+		log.info("response eliminar cliente: {}",apiResponse.toString());
+		log.info("Finalizo eliminacion de cliente");
+
+		return ResponseEntity.ok(apiResponse);
 	}
 	
 	@GetMapping("/find-by-id/{id}")
-	public ResponseEntity<?> findCustomerById(@PathVariable Long id){
-		try {
-			return ResponseEntity.ok(retrieveCustomerUseCase.getById(id));
-		} catch (RuntimeException e) {
-			log.warn(e.getMessage());
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}catch (Exception e) {
-			log.error("Error inesperado: "+e.getMessage());
-			return ResponseEntity.internalServerError().body("Ocurrio un inconveniente no se pudo encontrar el cliente.");
-		}
+	public ResponseEntity<Customer> findCustomerById(@PathVariable Long id){
+		return ResponseEntity.ok(retrieveCustomerUseCase.getById(id));
 	}
 	
 	@GetMapping("/find-by-document/{document}")
-	public ResponseEntity<?> findCustomerByDocument(@PathVariable String document){
-		try {
-			return ResponseEntity.ok(retrieveCustomerUseCase.getByDocument(document));
-		} catch (RuntimeException e) {
-			log.warn(e.getMessage());
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}catch (Exception e) {
-			log.error("Error inesperado: "+e.getMessage());
-			return ResponseEntity.internalServerError().body("Ocurrio un inconveniente no se pudo encontrar el cliente.");
-		}
+	public ResponseEntity<Customer> findCustomerByDocument(@PathVariable String document){
+		return ResponseEntity.ok(retrieveCustomerUseCase.getByDocument(document));
 	}
 	
 	@GetMapping("/find-all")
-	public ResponseEntity<?> findAllCustomers(){
-		try {
-			return ResponseEntity.ok(retrieveCustomerUseCase.getAll());
-		} catch (RuntimeException e) {
-			log.warn(e.getMessage());
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}catch (Exception e) {
-			log.error("Error inesperado: "+e.getMessage());
-			return ResponseEntity.internalServerError().body("Ocurrio un inconveniente al buscar el listado de clientes.");
-		}
+	public ResponseEntity<ApiResponse<List<Customer>>> findAllCustomers(){
+		log.info("Inicio busqueda de todos los clientes");
+		List<Customer> listCustomers = retrieveCustomerUseCase.getAll();
+
+		ApiResponse<List<Customer>> apiResponse = ResponseBuilder.successMessage("Clientes encontrados exitosamente: "+
+				listCustomers.size(),listCustomers);
+
+		log.info("response busqueda cliente: {}",apiResponse.toString());
+		log.info("Finalizo busqueda de todos los clientes");
+
+		return ResponseEntity.ok(apiResponse);
 	}
 }

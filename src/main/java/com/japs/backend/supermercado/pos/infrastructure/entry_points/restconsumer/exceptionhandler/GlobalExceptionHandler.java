@@ -1,8 +1,11 @@
 package com.japs.backend.supermercado.pos.infrastructure.entry_points.restconsumer.exceptionhandler;
 
+import com.japs.backend.supermercado.pos.application.response.ApiResponse;
 import com.japs.backend.supermercado.pos.application.response.ErrorResponse;
 import com.japs.backend.supermercado.pos.application.response.Errors;
 
+import com.japs.backend.supermercado.pos.application.utils.ResponseBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -11,16 +14,18 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST) // Devuelve un 400 Bad Request
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+	public ResponseEntity<ApiResponse<ErrorResponse>> handleValidationExceptions(MethodArgumentNotValidException ex) {
 		List<Errors> errorsList = new ArrayList<>();
 		
 		ex.getBindingResult().getAllErrors().forEach(error ->{
@@ -34,7 +39,10 @@ public class GlobalExceptionHandler {
 				.errors(errorsList)
 				.build();
 
-		return ResponseEntity.badRequest().body(errorResponse);
+		return ResponseEntity.badRequest().body(ApiResponse.<ErrorResponse>builder()
+				.message("Bad Request")
+				.status(false)
+				.data(errorResponse).build());
     }
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST) // Devuelve un 400 Bad Request
@@ -42,5 +50,26 @@ public class GlobalExceptionHandler {
 	public String handleValidationExceptions2(HttpMessageNotReadableException ex) {
 		return "No hay cuerpo de solicitud";
     }
+
+	@ExceptionHandler(RuntimeException.class)
+	public ResponseEntity<ApiResponse<Void>> handleBusinessException(RuntimeException e,WebRequest request) {
+		String path = request.getDescription(false);
+		ApiResponse<Void> apiResponse = ResponseBuilder.errorMessage(e.getMessage());
+		log.warn("Excepción de negocio en: {} -> {}", path, e.getMessage());
+		log.warn("response: {}",apiResponse.toString());
+		log.warn("Finalizo");
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(apiResponse);
+	}
+
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ApiResponse<Void>> handleUnexpectedException(Exception e,WebRequest request) {
+		String path = request.getDescription(false);
+		ApiResponse<Void> apiResponse = ResponseBuilder.errorMessage("No se pudo completar la operación. Por favor " +
+				"intente más tarde o comuníquese con el administrador del sistema.");
+		log.error("Excepción inesperada en: {} -> {}",path, e.getMessage());
+		log.error("response: {}",apiResponse.toString());
+		log.error("Finalizo operacion");
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
+	}
 
 }
