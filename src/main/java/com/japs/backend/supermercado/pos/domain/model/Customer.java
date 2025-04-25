@@ -1,5 +1,6 @@
 package com.japs.backend.supermercado.pos.domain.model;
 
+import com.japs.backend.supermercado.pos.application.utils.PhoneLengthIfPresent;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -26,8 +27,11 @@ public class Customer {
 	@NotEmpty(message = "El nombre no puede ser vacio.")
 	private String name;
 
-	@Pattern(regexp = "^(\\+\\d{1,2}|\\d{1,2})\\s?\\d+$", message = "El telefono debe ser numérico, estructura que debe tener: (indicativo pais opcional +57) +(espacio opcional)+ (numero celular 3219876543) = +57 3219876543, tambien puede quedar +573219876543 o 3219876543.")
-	@Size(min = 10, max = 14, message = "El numero de telefono debe contener entre 10 y 14 digitos")
+	@Pattern(
+			regexp = "^$|^(\\+\\d{1,2}|\\d{1,2})\\s?\\d{7,10}$",
+			message = "El teléfono debe ser numérico. Formatos válidos: +57 3219876543, +573219876543, 3219876543."
+	)
+	@PhoneLengthIfPresent()
 	private String mobileNumber;
 
 	@Email(message = "Debe ser un correo electrónico válido.")
