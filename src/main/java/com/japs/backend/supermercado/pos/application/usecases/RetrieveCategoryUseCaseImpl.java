@@ -35,8 +35,9 @@ public class RetrieveCategoryUseCaseImpl implements RetrieveCategoryUseCase {
 
     @Override
     public Category getByName(String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("Búsqueda fallida: nombre es null");
+
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Búsqueda fallida: El nombre no puede ser null");
         }
 
         dbConnectionPort.verifyDatabaseConnection();

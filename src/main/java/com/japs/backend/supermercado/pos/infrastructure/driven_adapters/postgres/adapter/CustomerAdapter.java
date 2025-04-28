@@ -6,8 +6,6 @@ import com.japs.backend.supermercado.pos.infrastructure.driven_adapters.postgres
 import com.japs.backend.supermercado.pos.infrastructure.driven_adapters.postgres.mapper.CustomerMapper;
 import com.japs.backend.supermercado.pos.infrastructure.driven_adapters.postgres.repository.CustomerEntityRepository;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,8 +16,6 @@ import java.util.Optional;
 public class CustomerAdapter implements CustomerRepositoryPort {
 
     private final CustomerEntityRepository customerEntityRepository;
-
-    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public Customer save(Customer customer) {

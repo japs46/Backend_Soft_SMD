@@ -83,7 +83,11 @@ public class CustomerController {
 	
 	@GetMapping("/find-by-document/{document}")
 	public ResponseEntity<Customer> findCustomerByDocument(@PathVariable String document){
-		return ResponseEntity.ok(retrieveCustomerUseCase.getByDocument(document));
+		log.info("Inicio busqueda de cliente con cedula: {}",document);
+		Customer customer = retrieveCustomerUseCase.getByDocument(document);
+		log.info("response busqueda cliente: {}",customer.toString());
+		log.info("Finalizo busqueda de cliente con cedula: {}",document);
+		return ResponseEntity.ok(customer);
 	}
 	
 	@GetMapping("/find-all")

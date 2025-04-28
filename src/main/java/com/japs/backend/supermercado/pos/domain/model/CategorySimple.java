@@ -4,17 +4,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @Builder(toBuilder = true)
-public class Category {
+public class CategorySimple {
 
-    @Schema(hidden = true)
     private Long id;
 
-    private String name;
-
     @Schema(hidden = true)
-    private List<ProductSimple> products;
+    private String name;
 }

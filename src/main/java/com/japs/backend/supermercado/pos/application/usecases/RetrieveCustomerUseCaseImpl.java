@@ -37,7 +37,7 @@ public class RetrieveCustomerUseCaseImpl implements RetrieveCustomerUseCase {
 	@Override
 	public Customer getByDocument(String document) {
 		
-		if (document == null) {
+		if (document == null || document.trim().isEmpty()) {
 			throw new IllegalArgumentException("Búsqueda fallida: valor de cédula es null");
 		}
 
