@@ -55,9 +55,9 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ApiResponse<Void>> handleBusinessException(RuntimeException e,WebRequest request) {
 		String path = request.getDescription(false);
 		ApiResponse<Void> apiResponse = ResponseBuilder.errorMessage(e.getMessage());
-		log.warn("Excepción de negocio en: {} -> {}", path, e.getMessage());
-		log.warn("response: {}",apiResponse.toString());
-		log.warn("Finalizo");
+		log.error("Excepción de negocio en: {} -> {}", path, e.getMessage());
+		log.error("response: {}",apiResponse.toString());
+		log.error("Finalizo operacion");
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(apiResponse);
 	}
 
