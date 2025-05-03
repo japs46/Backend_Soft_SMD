@@ -2,10 +2,10 @@ package com.japs.backend.supermercado.pos.application.services.impl;
 
 import com.japs.backend.supermercado.pos.application.services.CategoryService;
 import com.japs.backend.supermercado.pos.domain.model.Category;
-import com.japs.backend.supermercado.pos.domain.port.in.CreateCategoryUseCase;
-import com.japs.backend.supermercado.pos.domain.port.in.DeleteCategoryUseCase;
-import com.japs.backend.supermercado.pos.domain.port.in.RetrieveCategoryUseCase;
-import com.japs.backend.supermercado.pos.domain.port.in.UpdateCategoryUseCase;
+import com.japs.backend.supermercado.pos.domain.port.in.category.CreateCategoryUseCase;
+import com.japs.backend.supermercado.pos.domain.port.in.category.DeleteCategoryUseCase;
+import com.japs.backend.supermercado.pos.domain.port.in.category.RetrieveCategoryUseCase;
+import com.japs.backend.supermercado.pos.domain.port.in.category.UpdateCategoryUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

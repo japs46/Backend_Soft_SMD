@@ -2,10 +2,6 @@ package com.japs.backend.supermercado.pos.application.services.impl;
 
 import com.japs.backend.supermercado.pos.application.services.ProductService;
 import com.japs.backend.supermercado.pos.domain.model.Product;
-import com.japs.backend.supermercado.pos.domain.port.in.CreateCategoryUseCase;
-import com.japs.backend.supermercado.pos.domain.port.in.DeleteCategoryUseCase;
-import com.japs.backend.supermercado.pos.domain.port.in.RetrieveCategoryUseCase;
-import com.japs.backend.supermercado.pos.domain.port.in.UpdateCategoryUseCase;
 import com.japs.backend.supermercado.pos.domain.port.in.product.CreateProductUseCase;
 import com.japs.backend.supermercado.pos.domain.port.in.product.DeleteProductUseCase;
 import com.japs.backend.supermercado.pos.domain.port.in.product.RetrieveProductUseCase;

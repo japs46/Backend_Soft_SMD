@@ -48,7 +48,6 @@ public class Product {
     @Size(max = 4, message = "El codigoAcceso supera la cantidad de caracteres permitida [max. 4 caracteres]")
     private String accessCode;
 
-    @NotNull(message = "La categoria no puede ser null")
     private CategorySimple category;
 
     @Schema(hidden = true)
