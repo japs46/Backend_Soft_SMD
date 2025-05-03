@@ -1,6 +1,8 @@
 package com.japs.backend.supermercado.pos.infrastructure.entry_points.restconsumer.handler;
 
+import com.japs.backend.supermercado.pos.application.response.ApiResponse;
 import com.japs.backend.supermercado.pos.application.services.CategoryService;
+import com.japs.backend.supermercado.pos.application.utils.ResponseBuilder;
 import com.japs.backend.supermercado.pos.domain.model.Category;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/category")
@@ -25,81 +29,67 @@ public class CategoryController {
 
     @PostMapping("/save")
     public ResponseEntity<?> saveCategory(@Valid @RequestBody Category categoryRequest){
-        try {
-            return ResponseEntity.ok(categoryService.save(categoryRequest));
-        } catch (RuntimeException e) {
-            log.warn(e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (Exception e) {
-            log.error("Error inesperado: "+e.getMessage());
-            return ResponseEntity.internalServerError().body("No se pudo crear la categoria.");
-        }
+        log.info("Inicio creación de la categoria");
+        log.info("request create categoria: {}",categoryRequest.toString());
 
+        Category category = categoryService.save(categoryRequest);
+        ApiResponse<Category> apiResponse = ResponseBuilder.successMessage("Categoria creada exitosamente",category);
+
+        log.info("response create categoria: {}",apiResponse.toString());
+        log.info("Finalizo creación de la categoria");
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody Category categoryRequest){
-        try {
-            return ResponseEntity.ok(categoryService.update(id,categoryRequest));
-        } catch (RuntimeException e) {
-            log.warn(e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (Exception e) {
-            log.error("Error inesperado: "+e.getMessage());
-            return ResponseEntity.internalServerError().body("No se pudo actualizar la categoria.");
-        }
+        log.info("Inicio actualizacion de la categoria: {}",id);
+        log.info("request update categoria: {}",categoryRequest.toString());
+
+        Category category  = categoryService.update(id,categoryRequest);
+        ApiResponse<Category> apiResponse = ResponseBuilder.successMessage("Categoria actualizada exitosamente",category);
+
+        log.info("response update categoria: {}",apiResponse.toString());
+        log.info("Finalizo actualizacion de la categoria");
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Long id){
-        try {
-            categoryService.delete(id);
-            return ResponseEntity.ok("Se Elimino la categoria correctamente.");
-        } catch (RuntimeException e) {
-            log.warn(e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (Exception e) {
-            log.error("Error inesperado: "+e.getMessage());
-            return ResponseEntity.internalServerError().body("Ocurrio un inconveniente no se pudo eliminar la categoria.");
-        }
+        log.info("Inicio eliminacion de la categoria");
+        log.info("request entrada id: {}",id);
+
+        categoryService.delete(id);
+        ApiResponse<Void> apiResponse = ResponseBuilder.successMessage("Se Elimino la categoria correctamente.");
+
+        log.info("response eliminar categoria: {}",apiResponse.toString());
+        log.info("Finalizo eliminacion de la categoria");
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/find-by-id/{id}")
-    public ResponseEntity<?> findCategoryById(@PathVariable Long id){
-        try {
-            return ResponseEntity.ok(categoryService.findById(id));
-        } catch (RuntimeException e) {
-            log.warn(e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (Exception e) {
-            log.error("Error inesperado: "+e.getMessage());
-            return ResponseEntity.internalServerError().body("Ocurrio un inconveniente no se pudo encontrar la categoria.");
-        }
+    public ResponseEntity<Category> findCategoryById(@PathVariable Long id){
+       return ResponseEntity.ok(categoryService.findById(id));
     }
 
     @GetMapping("/find-by-document/{name}")
-    public ResponseEntity<?> findCustomerByDocument(@PathVariable String name){
-        try {
-            return ResponseEntity.ok(categoryService.findByName(name));
-        } catch (RuntimeException e) {
-            log.warn(e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (Exception e) {
-            log.error("Error inesperado: "+e.getMessage());
-            return ResponseEntity.internalServerError().body("Ocurrio un inconveniente no se pudo encontrar la categoria.");
-        }
+    public ResponseEntity<Category> findCategoryByDocument(@PathVariable String name){
+       return ResponseEntity.ok(categoryService.findByName(name));
     }
 
     @GetMapping("/find-all")
-    public ResponseEntity<?> findAllCustomers(){
-        try {
-            return ResponseEntity.ok(categoryService.findAll());
-        } catch (RuntimeException e) {
-            log.warn(e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (Exception e) {
-            log.error("Error inesperado: "+e.getMessage());
-            return ResponseEntity.internalServerError().body("Ocurrio un inconveniente al buscar el listado de las categorias.");
-        }
+    public ResponseEntity<ApiResponse<List<Category>>> findAllCategory(){
+        log.info("Inicio busqueda de todas las categorias");
+        List<Category> listCategories = categoryService.findAll();
+
+        ApiResponse<List<Category>> apiResponse = ResponseBuilder.successMessage("Categorias encontradas exitosamente: "+
+                listCategories.size(),listCategories);
+
+        log.info("response busqueda categorias: {}",apiResponse.toString());
+        log.info("Finalizo busqueda de todas las categorias");
+
+        return ResponseEntity.ok(apiResponse);
     }
 }

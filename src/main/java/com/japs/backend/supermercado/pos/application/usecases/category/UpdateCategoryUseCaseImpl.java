@@ -1,14 +1,11 @@
-package com.japs.backend.supermercado.pos.application.usecases;
+package com.japs.backend.supermercado.pos.application.usecases.category;
 
 import com.japs.backend.supermercado.pos.domain.model.Category;
-import com.japs.backend.supermercado.pos.domain.model.Customer;
-import com.japs.backend.supermercado.pos.domain.port.in.UpdateCategoryUseCase;
+import com.japs.backend.supermercado.pos.domain.port.in.category.UpdateCategoryUseCase;
 import com.japs.backend.supermercado.pos.domain.port.out.CategoryRepositoryPort;
 import com.japs.backend.supermercado.pos.domain.port.out.DBConnectionPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
 
 @RequiredArgsConstructor
 @Component
