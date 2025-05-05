@@ -20,7 +20,7 @@ public class ProductSimple {
 
     private BigDecimal price;
 
-    private Integer stockQuantity;
+    private BigDecimal stockQuantity;
 
     private String unitMeasurement;
 

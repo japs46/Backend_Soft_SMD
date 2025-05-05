@@ -35,11 +35,13 @@ public class Product {
     private String description;
 
     @NotNull(message = "El precio no puede ser null.")
-    @Digits(integer = 8, fraction = 2, message = "El precio debe tener máximo 8 dígitos enteros y 2 decimales")
+    @Digits(integer = 10, fraction = 2, message = "El precio debe tener máximo 10 dígitos enteros y 2 decimales")
     private BigDecimal price;
 
     @NotNull(message = "La cantidadStock no puede ser null")
-    private Integer stockQuantity;
+    @Digits(integer = 7, fraction = 2, message = "La cantidad stock debe tener máximo 7 dígitos enteros y 2 " +
+            "decimales")
+    private BigDecimal stockQuantity;
 
     @NotEmpty(message = "La unidad de medida no puede ser vacio.")
     @Size(max = 2, message = "La unidad de medida supera la cantidad de caracteres permitida [max. 2 caracteres]")

@@ -38,11 +38,11 @@ public class ProductEntity {
     @Column(length = 500)
     private String description;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal price;
 
-    @Column(name = "stock_quantity", nullable = false)
-    private Integer stockQuantity;
+    @Column(name = "stock_quantity", nullable = false, precision = 9, scale = 2)
+    private BigDecimal stockQuantity;
 
     @Column(name = "unit_measurement", length = 2, nullable = false)
     private String unitMeasurement;
